@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VillaHotelBooking.Domain.Entities;
 
 namespace VillaHotelBooking.App.Common.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IVillaNumberRepository : IRepository<VillaNumber>
     {
-        IVillaRepository Villas { get; }
-        IVillaNumberRepository VillaNumbers { get; }
-        void Save();
+        void Update(VillaNumber entity);
     }
 }
