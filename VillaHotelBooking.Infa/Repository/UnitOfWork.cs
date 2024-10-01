@@ -15,12 +15,14 @@ namespace VillaHotelBooking.Infa.Repository
         public IVillaRepository Villas { get; private set; }
 
         public IVillaNumberRepository VillaNumbers { get; private set; }
+        public IAmenityRepository Amenities { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
             Villas = new VillaRepository(_context);
             VillaNumbers = new VillaNumberRepository(_context);
+            Amenities = new AmenityRepository(_context);
         }
         public void Save()
         {

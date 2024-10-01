@@ -10,6 +10,7 @@ namespace VillaHotelBooking.App.Common.Interfaces
     {
         IVillaRepository Villas { get; }
         IVillaNumberRepository VillaNumbers { get; }
+        IAmenityRepository Amenities { get; }
         void Save();
     }
 }

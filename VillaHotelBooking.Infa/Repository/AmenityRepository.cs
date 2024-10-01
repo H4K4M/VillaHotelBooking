@@ -9,14 +9,14 @@ using VillaHotelBooking.Infa.Data;
 
 namespace VillaHotelBooking.Infa.Repository
 {
-    public class VillaNumberRepository : Repository<VillaNumber>, IVillaNumberRepository
+    public class AmenityRepository : Repository<Amenity>, IAmenityRepository
     {
         private readonly ApplicationDbContext _context;
-        public VillaNumberRepository(ApplicationDbContext context) : base(context)
+        public AmenityRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
-        public void Update(VillaNumber entity)
+        public void Update(Amenity entity)
         {
             _context.Update(entity);
         }
