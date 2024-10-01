@@ -44,7 +44,7 @@ namespace VillaHotelBooking.Web.Controllers
                     using var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create);
                     villa.Image.CopyTo(fileStream);
 
-                    villa.ImageUrl = @"images\VillaImage\" + fileName;
+                    villa.ImageUrl = @"\images\VillaImage\" + fileName;
                 }
                 else
                 {
@@ -81,6 +81,26 @@ namespace VillaHotelBooking.Web.Controllers
             }
             if (ModelState.IsValid)
             {
+                if (villa.Image != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(villa.Image.FileName);
+                    string imagePath = Path.Combine(_hostingEnvironment.WebRootPath, @"images\VillaImage");
+
+                    if(!string.IsNullOrEmpty(villa.ImageUrl))
+                    {
+                        var oldImagePath = Path.Combine(_hostingEnvironment.WebRootPath, villa.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    using var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create);
+                    villa.Image.CopyTo(fileStream);
+
+                    villa.ImageUrl = @"\images\VillaImage\" + fileName;
+                }
+
                 _unitOfWork.Villas.Update(villa);
                 _unitOfWork.Save();
                 TempData["success"] = "The villa has been updated successfully.";
@@ -108,6 +128,15 @@ namespace VillaHotelBooking.Web.Controllers
             Villa? villaFromDb = _unitOfWork.Villas.Get(v => v.Id == villa.Id);
             if (villaFromDb is not null)
             {
+                if (!string.IsNullOrEmpty(villaFromDb.ImageUrl))
+                {
+                    var oldImagePath = Path.Combine(_hostingEnvironment.WebRootPath, villaFromDb.ImageUrl.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
                 _unitOfWork.Villas.Remove(villaFromDb);
                 _unitOfWork.Save();
                 TempData["success"] = "The villa has been deleted successfully.";
