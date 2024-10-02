@@ -21,6 +21,23 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+// Over write authorization page example
+//builder.Services.ConfigureApplicationCookie(options =>
+//{
+//    options.AccessDeniedPath = "/Home/AccessDenied";
+//    options.LoginPath = "/Account/Login";
+//});
+
+// custom password policy
+//builder.Services.Configure<IdentityOptions>(options =>
+//{
+//    options.Password.RequireDigit = false;
+//    options.Password.RequireLowercase = false;
+//    options.Password.RequireUppercase = false;
+//    options.Password.RequireNonAlphanumeric = false;
+//    options.Password.RequiredLength = 3;
+//});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
