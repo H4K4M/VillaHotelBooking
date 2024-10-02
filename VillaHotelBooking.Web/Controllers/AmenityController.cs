@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using VillaHotelBooking.App.Common.Interfaces;
+using VillaHotelBooking.App.Common.Utility;
 using VillaHotelBooking.Domain.Entities;
 using VillaHotelBooking.Web.ViewModels;
 
 namespace VillaHotelBooking.Web.Controllers
 {
+    [Authorize(Roles = SD.Role_Admin)]
     public class AmenityController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
