@@ -31,5 +31,8 @@ namespace VillaHotelBooking.Domain.Entities
 
         [ValidateNever]
         public IEnumerable<Amenity> VillaAmenity { get; set; }
+
+        [NotMapped]
+        public bool IsVailable { get; set; } = true;
     }
 }
