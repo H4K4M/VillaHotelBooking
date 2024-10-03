@@ -5,6 +5,7 @@ using VillaHotelBooking.Infa.Repository;
 using Microsoft.AspNetCore.Identity;
 using VillaHotelBooking.Domain.Entities;
 using System.Globalization;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,10 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 //});
 
 var app = builder.Build();
+
+// Regiter Strip api key
+Stripe.StripeConfiguration.ApiKey = app.Configuration.GetSection("Stripe")["SecretKey"];
+//StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe: SecretKey").Get<string>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
