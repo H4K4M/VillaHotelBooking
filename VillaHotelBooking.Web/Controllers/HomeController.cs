@@ -25,15 +25,8 @@ namespace VillaHotelBooking.Web.Controllers
             return View(homeVM);
         }
 
-        // POST: HomeController/Index
+        // POST: HomeController/Index  POST as PartialView
         [HttpPost]
-        public IActionResult Index(HomeVM homeVM)
-        {
-            homeVM.VillaList = _unitOfWork.Villas.GetAll(includeProperties: "VillaAmenity");
-            
-            return View(homeVM);
-        }
-
         public IActionResult GetVillasByDate(int nights, DateOnly checkInDate)
         {
             var villaList = _unitOfWork.Villas.GetAll(includeProperties: "VillaAmenity").ToList();
