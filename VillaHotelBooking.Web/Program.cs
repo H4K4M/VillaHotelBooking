@@ -4,6 +4,7 @@ using VillaHotelBooking.App.Common.Interfaces;
 using VillaHotelBooking.Infa.Repository;
 using Microsoft.AspNetCore.Identity;
 using VillaHotelBooking.Domain.Entities;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
