@@ -16,6 +16,7 @@ namespace VillaHotelBooking.Infa.Repository
 
         public IVillaNumberRepository VillaNumbers { get; private set; }
         public IAmenityRepository Amenities { get; private set; }
+        public IBookingRepository Bookings { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -23,6 +24,7 @@ namespace VillaHotelBooking.Infa.Repository
             Villas = new VillaRepository(_context);
             VillaNumbers = new VillaNumberRepository(_context);
             Amenities = new AmenityRepository(_context);
+            Bookings = new BookingRepository(_context);
         }
         public void Save()
         {
