@@ -24,7 +24,7 @@ function loadDataTable(status) {
                 data: 'id',
                 "render": function (data) {
                     return `<div class="w-75 btn-group">
-                            <a href="/bookin/bookingDetails?bookingId=${data}" class="btn btn-outline-warning mx-2">
+                            <a href="/Booking/BookingDetails?bookingId=${data}" class="btn btn-outline-warning mx-2">
                                 <i class="bi bi-pencil-square"></i> Details</a>
                         </div>`
                 },

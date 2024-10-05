@@ -119,6 +119,14 @@ namespace VillaHotelBooking.Web.Controllers
 
             return View(bookingId);
         }
+        [Authorize]
+        public IActionResult BookingDetails(int bookingId)
+        {
+            Booking bookingFromDb = _unitOfWork.Bookings.Get(u => u.Id == bookingId, includeProperties: "User,Villa");
+
+
+            return View(bookingFromDb);
+        }
 
         #region API Calls
 
@@ -137,7 +145,7 @@ namespace VillaHotelBooking.Web.Controllers
                 var UserId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
                 objBookings = _unitOfWork.Bookings.GetAll(u => u.UserId == UserId, includeProperties: "User,Villa");
             }
-            if(!string.IsNullOrEmpty(status))
+            if(!string.IsNullOrEmpty(status) && status != "All")
             {
                 objBookings = objBookings.Where(u => u.Status.ToLower().Equals(status.ToLower()));
             }
