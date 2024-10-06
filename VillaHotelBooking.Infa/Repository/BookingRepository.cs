@@ -22,7 +22,7 @@ namespace VillaHotelBooking.Infa.Repository
             _context.Bookings.Update(entity);
         }
 
-        public void UpdateStatus(int bookingId, string bookingStatus)
+        public void UpdateStatus(int bookingId, string bookingStatus, int vilaNumber = 0)
         {
             var bookingFromDb = _context.Bookings.FirstOrDefault(u => u.Id == bookingId);
             if(bookingFromDb != null)
@@ -30,6 +30,7 @@ namespace VillaHotelBooking.Infa.Repository
                 bookingFromDb.Status = bookingStatus;
                 if(bookingStatus == SD.StatusCheckedIn)
                 {
+                    bookingFromDb.VillaNumber = vilaNumber;
                     bookingFromDb.ActualCheckInDate = DateTime.Now;
                 }
                 if (bookingStatus == SD.StatusCompleted)

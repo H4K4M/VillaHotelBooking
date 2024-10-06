@@ -111,7 +111,7 @@ namespace VillaHotelBooking.Web.Controllers
 
                 if (session.PaymentStatus == "paid")
                 {
-                    _unitOfWork.Bookings.UpdateStatus(bookingFromDb.Id, SD.StatusApproved);
+                    _unitOfWork.Bookings.UpdateStatus(bookingFromDb.Id, SD.StatusApproved, 0);
                     _unitOfWork.Bookings.UpdateStripePaymentID(bookingFromDb.Id, session.Id, session.PaymentIntentId);
                     _unitOfWork.Save();
                 }
@@ -124,8 +124,34 @@ namespace VillaHotelBooking.Web.Controllers
         {
             Booking bookingFromDb = _unitOfWork.Bookings.Get(u => u.Id == bookingId, includeProperties: "User,Villa");
 
+            if(bookingFromDb.VillaNumber == 0 && bookingFromDb.Status == SD.StatusApproved)
+            {
+                var availableVillaNumbers = AssignAvailableVillaNumberByVilla(bookingFromDb.VillaId);
+                bookingFromDb.VillaNumbers = _unitOfWork.VillaNumbers.GetAll(u => u.VillaId == bookingFromDb.VillaId 
+                                            && availableVillaNumbers.Any(x => x == u.Villa_Number)).ToList();
+
+            }
 
             return View(bookingFromDb);
+        }
+
+        private List<int> AssignAvailableVillaNumberByVilla(int villaId)
+        {
+            List<int> availableVillaNumbers = new();
+
+            var villanumbers = _unitOfWork.VillaNumbers.GetAll(u => u.VillaId == villaId);
+
+            var checkedInVilla = _unitOfWork.Bookings.GetAll(u => u.VillaId == villaId && u.Status == SD.StatusCheckedIn)
+                .Select(u => u.VillaNumber);
+
+            foreach (var villaNumber in villanumbers)
+            {
+                if(!checkedInVilla.Contains(villaNumber.Villa_Number))
+                {
+                    availableVillaNumbers.Add(villaNumber.Villa_Number);
+                }
+            }
+            return availableVillaNumbers;
         }
 
         #region API Calls
