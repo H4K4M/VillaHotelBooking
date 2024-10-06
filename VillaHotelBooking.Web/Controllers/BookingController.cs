@@ -61,6 +61,23 @@ namespace VillaHotelBooking.Web.Controllers
             booking.Status = SD.StatusPending;
             booking.BookingDate = DateTime.Now;
 
+            var villaNumberList = _unitOfWork.VillaNumbers.GetAll().ToList();
+            var bookedVillas = _unitOfWork.Bookings.GetAll(u => u.Status == SD.StatusApproved || u.Status == SD.StatusCheckedIn).ToList();
+
+
+            int roomAvailable = SD.VillaRoomAvailable_Count(villa.Id, villaNumberList, booking.CheckInDate, booking.Nights, bookedVillas);
+
+            if(roomAvailable == 0)
+            {
+                TempData["Error"] = "No Room Available for this Villa";
+                return RedirectToAction(nameof(FinalizeBooking), new 
+                { 
+                    villaId = booking.VillaId, 
+                    checkInDate = booking.CheckInDate.ToString("dd/MM/yyyy"), 
+                    nights = booking.Nights 
+                });
+            }
+
             _unitOfWork.Bookings.Add(booking);
             _unitOfWork.Save();
 
