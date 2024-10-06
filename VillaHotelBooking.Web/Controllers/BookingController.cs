@@ -134,6 +134,38 @@ namespace VillaHotelBooking.Web.Controllers
 
             return View(bookingFromDb);
         }
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Admin)]
+        public IActionResult CheckIn(Booking booking)
+        {
+            _unitOfWork.Bookings.UpdateStatus(booking.Id, SD.StatusCheckedIn, booking.VillaNumber);
+            _unitOfWork.Save();
+
+            TempData["Success"] = "Check In Successfully";
+            return RedirectToAction(nameof(BookingDetails), new { bookingId = booking.Id });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Admin)]
+        public IActionResult CheckOut(Booking booking)
+        {
+            _unitOfWork.Bookings.UpdateStatus(booking.Id, SD.StatusCompleted, booking.VillaNumber);
+            _unitOfWork.Save();
+
+            TempData["Success"] = "Check Out Successfully";
+            return RedirectToAction(nameof(BookingDetails), new { bookingId = booking.Id });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Admin)]
+        public IActionResult CancelBooking(Booking booking)
+        {
+            _unitOfWork.Bookings.UpdateStatus(booking.Id, SD.StatusCancelled, 0);
+            _unitOfWork.Save();
+
+            TempData["Success"] = "Cancelled Successfully";
+            return RedirectToAction(nameof(BookingDetails), new { bookingId = booking.Id });
+        }
 
         private List<int> AssignAvailableVillaNumberByVilla(int villaId)
         {
