@@ -43,13 +43,16 @@
                                     <li>
                                         <a class="dropdown-item" asp-area="" asp-controller="Amenity" asp-action="Index">Amenity</a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Booking" asp-action="Index" asp-route-status="All">Booking</a>
+                                    </li>
                                 </ul>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Booking" asp-action="Index">Manage Bookings</a>
+                                <a class="nav-link" asp-area="" asp-controller="Booking" asp-action="Index" asp-route-status="All">Manage Bookings</a>
                             </li>
                         }
 
