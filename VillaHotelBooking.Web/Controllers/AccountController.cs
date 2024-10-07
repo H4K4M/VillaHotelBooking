@@ -48,11 +48,19 @@ namespace VillaHotelBooking.Web.Controllers
                 var result = await _signInManager.PasswordSignInAsync(loginVM.Email, loginVM.Password, loginVM.RememberMe, lockoutOnFailure: false);
                 if(result.Succeeded)
                 {
-                    if(!string.IsNullOrEmpty(loginVM.RedirectUrl) && Url.IsLocalUrl(loginVM.RedirectUrl))
+                    var user = await _userManager.FindByEmailAsync(loginVM.Email);
+                    if (await _userManager.IsInRoleAsync(user, SD.Role_Admin))
                     {
-                        return Redirect(loginVM.RedirectUrl);
+                        return RedirectToAction("Index", "Dashboard");
                     }
-                    return RedirectToAction("Index", "Home");
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(loginVM.RedirectUrl) && Url.IsLocalUrl(loginVM.RedirectUrl))
+                        {
+                            return Redirect(loginVM.RedirectUrl);
+                        }
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 ModelState.AddModelError("", "Invalid login attempt");
 
