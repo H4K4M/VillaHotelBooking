@@ -6,16 +6,30 @@
 <ul class="navbar-nav">
     @if(SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a class="nav-link" href="#" >Hello, @UserManager.GetUserName(User)</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a>
-        </li>
+        if (User.IsInRole(SD.Role_Admin))
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Hello, @UserManager.GetUserName(User)
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="nav-link text-center" asp-controller="Account" asp-action="Logout">Logout</a>
+                </ul>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="#">Hello, @UserManager.GetUserName(User)</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a>
+            </li>
+        }
     }
     else
     {
-        <li class="nav-item">
+        <li class="nav-item dropdown">
             <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
         </li>
         <li class="nav-item">
