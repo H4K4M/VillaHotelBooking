@@ -77,8 +77,10 @@
         <div class="col-md-12 col-xl-8 mt-2">
             <div class="card">
                 <div class="card-body">
-                    
-
+                    <div>
+                        <p class="text-muted mb-0">New Members and Bookings In Past 30 Days<p>
+                    </div>
+                    <div id="newMembersBookingsLineChart" data-colors='["--bs-warning","--bs-primary"]'></div>
                     <!-- Spinner -->
                     <div class="justify-content-center text-center chart-spinner" style="display:none">
                         <div class="spinner-border" role="status">
@@ -94,9 +96,7 @@
                     <div class="">
                         <p class="text-muted mb-0">Customer Bookings</p>
                     </div>
-                    <div id="customerBookingsPieChart" data-colors='["--bs-warning","--bs-primary"]'>
-
-                    </div>
+                    <div id="customerBookingsPieChart" data-colors='["--bs-warning","--bs-primary"]'></div>
 
                     <!-- Spinner -->
                     <div class="justify-content-center text-center chart-spinner" style="display:none">
@@ -116,4 +116,5 @@
     <script src="~/js/dashboard/getTotalRevenueRadialChart.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/getTotalUserRadialChart.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/getBookingPieChart.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/getCustomerBookingLineChart.js" asp-append-version="true"></script>
 }

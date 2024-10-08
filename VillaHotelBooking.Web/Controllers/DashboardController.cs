@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using VillaHotelBooking.App.Common.Interfaces;
 using VillaHotelBooking.App.Common.Utility;
 using VillaHotelBooking.Web.ViewModels;
@@ -90,6 +91,76 @@ namespace VillaHotelBooking.Web.Controllers
             
 
             return Json(pieChartVM);
+        }
+
+        public async Task<IActionResult> GetMemberAndBookingLineChartData()
+        {
+            var bookingData = _unitOfWork.Bookings.GetAll(u => u.BookingDate >= DateTime.Now.AddDays(-30)
+            && u.BookingDate.Date <= DateTime.Now)
+                .GroupBy(b => b.BookingDate.Date)
+                .Select(u => new
+                {
+                    DateTime = u.Key,
+                    NewBookingCount = u.Count(),
+                });
+
+            var customerData = _unitOfWork.ApplicationUsers.GetAll(u => u.CreatedAt >= DateTime.Now.AddDays(-30)
+            && u.CreatedAt.Date <= DateTime.Now)
+                .GroupBy(b => b.CreatedAt.Date)
+                .Select(u => new
+                {
+                    DateTime = u.Key,
+                    NewCustomerCount = u.Count(),
+                });
+            var leftJoin = bookingData.GroupJoin(customerData, b => b.DateTime, c => c.DateTime,
+                               (b, c) => new
+                               {
+                                   b.DateTime,
+                                   b.NewBookingCount,
+                                   NewCustomerCount = c.Select(x => x.NewCustomerCount).FirstOrDefault()
+                               });
+            var rightJoin = customerData.GroupJoin(bookingData, c => c.DateTime, b => b.DateTime, 
+                               (c, b) => new
+                               {
+                                   c.DateTime,
+                                   NewBookingCount = b.Select(x => x.NewBookingCount).FirstOrDefault(),
+                                   c.NewCustomerCount,
+                                   
+                               });
+
+            var mergedData = leftJoin.Union(rightJoin).OrderBy(x => x.DateTime).ToList();
+
+            var newBookingData = mergedData.Select(x => x.NewBookingCount).ToArray();
+            var newCustomerData = mergedData.Select(x => x.NewCustomerCount).ToArray();
+
+            var categories = mergedData.Select(x => x.DateTime.ToString("dd/MM/yyyy")).ToArray();
+
+
+            //List<ChartData> chartDataList = new() {
+            //    new ChartData {
+            //        Name = "New Bookings",
+            //        Data = newBookingData
+            //    },
+            //    new ChartData
+            //    {
+            //        Name = "New Customers",
+            //        Data = newCustomerData
+            //    }
+            //};
+            LineChartVM lineChartVM = new()
+            {
+                Series = new List<ChartData>
+                {
+                    new ChartData { Name = "New Bookings", Data = newBookingData },
+                    new ChartData { Name = "New Members", Data = newCustomerData }
+
+                },
+                Categories = categories
+            };
+
+            
+
+            return Json(lineChartVM);
         }
 
         private static RadialBarChartVM GetRadialChartDataModel(int totalCount, double currentMonthCount, double prevMonthCount)
