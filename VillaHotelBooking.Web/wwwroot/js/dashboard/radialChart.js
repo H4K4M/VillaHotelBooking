@@ -19,13 +19,14 @@
         plotOptions: {
             radialBar: {
                 dataLabels: {
-
                     value: {
                         offsetY: -10,
+                        color: chartColors[0],
                     }
                 }
             }
         },
+
         labels: [""]
     };
 
