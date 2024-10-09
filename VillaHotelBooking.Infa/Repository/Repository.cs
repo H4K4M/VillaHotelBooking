@@ -26,12 +26,20 @@ namespace VillaHotelBooking.Infa.Repository
 
         bool IRepository<T>.Any(Expression<Func<T, bool>> filter)
         {
-            return dbSet.Any(filter);
+            return dbSet.Any(filter);   
         }
 
-        T IRepository<T>.Get(Expression<Func<T, bool>> filter, string? includeProperties)
+        T IRepository<T>.Get(Expression<Func<T, bool>> filter, string? includeProperties, bool tracked = false)
         {
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query;
+            if (tracked)
+            {
+                query = dbSet;
+            }
+            else
+            {
+                query = dbSet.AsNoTracking();
+            }
             if (filter != null)
             {
                 query = query.Where(filter);
@@ -47,9 +55,17 @@ namespace VillaHotelBooking.Infa.Repository
             return query.FirstOrDefault();
         }
 
-        IEnumerable<T> IRepository<T>.GetAll(Expression<Func<T, bool>>? filter, string? includeProperties)
+        IEnumerable<T> IRepository<T>.GetAll(Expression<Func<T, bool>>? filter, string? includeProperties, bool tracked = false)
         {
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query;
+            if (tracked)
+            {
+                query = dbSet;
+            }
+            else
+            {
+                query = dbSet.AsNoTracking();
+            }
             if (filter != null)
             {
                 query = query.Where(filter);
