@@ -44,7 +44,10 @@ var app = builder.Build();
 
 // Regiter Strip api key
 Stripe.StripeConfiguration.ApiKey = app.Configuration.GetSection("Stripe")["SecretKey"];
-//StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe: SecretKey").Get<string>();
+//StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
+
+// Register Syncfusion license
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(app.Configuration.GetSection("Syncfusion")["LicenseKey"]);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
