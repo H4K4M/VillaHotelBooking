@@ -7,6 +7,7 @@ using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
 using Syncfusion.Drawing;
+using Syncfusion.Pdf;
 using System.Globalization;
 using System.Security.Claims;
 using VillaHotelBooking.App.Common.Interfaces;
@@ -160,7 +161,7 @@ namespace VillaHotelBooking.Web.Controllers
         }
         [HttpPost]
         [Authorize]
-        public IActionResult GenerateInvoice(int id)
+        public IActionResult GenerateInvoice(int id, string downloadType)
         {
             string basePath = _webHostEnvironment.WebRootPath;
 
@@ -219,7 +220,7 @@ namespace VillaHotelBooking.Web.Controllers
             table.TableFormat.Borders.Horizontal.LineWidth = 1f;
 
             table.ResetCells(2, 4);
-            
+
             WTableRow row0 = table.Rows[0];
             row0.Cells[0].AddParagraph().AppendText("NIGHTS");
             row0.Cells[0].Width = 80;
@@ -234,7 +235,7 @@ namespace VillaHotelBooking.Web.Controllers
             row1.Cells[0].Width = 80;
             row1.Cells[1].AddParagraph().AppendText(bookingFromDb.Villa.Name);
             row1.Cells[1].Width = 220;
-            row1.Cells[2].AddParagraph().AppendText((bookingFromDb.TotalCost/bookingFromDb.Nights).ToString("c", new CultureInfo("th-TH")));
+            row1.Cells[2].AddParagraph().AppendText((bookingFromDb.TotalCost / bookingFromDb.Nights).ToString("c", new CultureInfo("th-TH")));
             row1.Cells[3].AddParagraph().AppendText(bookingFromDb.TotalCost.ToString("c", new CultureInfo("th-TH")));
             row1.Cells[3].Width = 80;
 
@@ -248,7 +249,7 @@ namespace VillaHotelBooking.Web.Controllers
 
             ConditionalFormattingStyle firstRowStyle = tableStyle.ConditionalFormattingStyles.Add(ConditionalFormattingType.FirstRow);
             firstRowStyle.CharacterFormat.Bold = true;
-            firstRowStyle.CharacterFormat.TextColor = Color.FromArgb(255,255,255,255);
+            firstRowStyle.CharacterFormat.TextColor = Color.FromArgb(255, 255, 255, 255);
             firstRowStyle.CellProperties.BackColor = Color.Black;
 
             table.ApplyStyle("CustomStyle");
@@ -256,17 +257,29 @@ namespace VillaHotelBooking.Web.Controllers
             TextBodyPart bodyPart = new(document);
             bodyPart.BodyItems.Add(table);
 
-            document.Replace("<ADDTABLEHERE>",bodyPart,false,false);
+            document.Replace("<ADDTABLEHERE>", bodyPart, false, false);
 
 
 
             using DocIORenderer renderer = new();
-
             MemoryStream stream = new();
-            document.Save(stream, FormatType.Docx);
-            stream.Position = 0;
+            if (downloadType == "word")
+            {
+                document.Save(stream, FormatType.Docx);
+                stream.Position = 0;
 
-            return File(stream, "application/docx", "BookingDetails.docx");
+
+                return File(stream, "application/docx", "BookingDetails.docx");
+            }
+            else
+            {
+                PdfDocument pdfDocument = renderer.ConvertToPDF(document);
+                pdfDocument.Save(stream);
+                stream.Position = 0;
+
+
+                return File(stream, "application/pdf", "BookingDetails.pdf");
+            }
         }
 
         [HttpPost]
