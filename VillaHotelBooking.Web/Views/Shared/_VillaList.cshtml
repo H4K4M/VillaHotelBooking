@@ -79,6 +79,9 @@
                             
                         </div>
                         <div class="modal-footer">
+                            <button type="submit" asp-controller="Home" asp-action="GeneratePPTExport" asp-route-id="@villa.Id" class="btn btn-outline-warning" data-bs-dismiss="modal">
+                                <i class="bi bi-filetype-ppt"></i> Download Villa Details
+                            </button>
                             <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
                         </div>
 
