@@ -219,7 +219,8 @@ namespace VillaHotelBooking.Web.Controllers
             table.TableFormat.Paddings.Bottom = 7f;
             table.TableFormat.Borders.Horizontal.LineWidth = 1f;
 
-            table.ResetCells(2, 4);
+            int rowCount = bookingFromDb.VillaNumber > 0 ? 3 : 2;
+            table.ResetCells(rowCount, 4);  // 2 rows and 4 columns
 
             WTableRow row0 = table.Rows[0];
             row0.Cells[0].AddParagraph().AppendText("NIGHTS");
@@ -238,6 +239,15 @@ namespace VillaHotelBooking.Web.Controllers
             row1.Cells[2].AddParagraph().AppendText((bookingFromDb.TotalCost / bookingFromDb.Nights).ToString("c", new CultureInfo("th-TH")));
             row1.Cells[3].AddParagraph().AppendText(bookingFromDb.TotalCost.ToString("c", new CultureInfo("th-TH")));
             row1.Cells[3].Width = 80;
+
+            if(bookingFromDb.VillaNumber > 0)
+            {
+                WTableRow row2 = table.Rows[2];
+                row2.Cells[0].Width = 80;
+                row2.Cells[1].AddParagraph().AppendText("Villa Number - " + bookingFromDb.VillaNumber.ToString());
+                row2.Cells[1].Width = 220;
+                row2.Cells[3].Width = 80;
+            }
 
             WTableStyle tableStyle = document.AddTableStyle("CustomStyle") as WTableStyle;
             tableStyle.TableProperties.RowStripe = 1;
