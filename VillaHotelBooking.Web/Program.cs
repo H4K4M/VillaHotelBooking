@@ -24,6 +24,9 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // add dashboard service
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
+// add DbInitializer
+builder.Services.AddScoped<IDbInitialize, DbInitializer>();
+
 // add identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -68,9 +71,19 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+seedDatabase();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+void seedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitialize = scope.ServiceProvider.GetRequiredService<IDbInitialize>();
+        dbInitialize.Initialize();
+    }
+}
