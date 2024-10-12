@@ -1,6 +1,6 @@
 ﻿namespace VillaHotelBooking.Web.ViewModels
 {
-    public class LineChartVM
+    public class LineChartDto
     {
         public List<ChartData> Series { get; set; }
         public string[] Categories { get; set; }

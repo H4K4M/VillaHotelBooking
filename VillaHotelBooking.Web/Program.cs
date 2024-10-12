@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using VillaHotelBooking.Domain.Entities;
 using System.Globalization;
 using Stripe;
+using VillaHotelBooking.App.Services.Interface;
+using VillaHotelBooking.App.Services.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,9 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 
 // add unit of work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// add dashboard service
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 // add identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()

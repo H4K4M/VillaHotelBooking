@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VillaHotelBooking.Domain.Entities;
+using VillaHotelBooking.Web.ViewModels;
 
 namespace VillaHotelBooking.App.Common.Utility
 {
@@ -50,6 +51,25 @@ namespace VillaHotelBooking.App.Common.Utility
                 }
             }
             return finalAvailableRoomsForAllNights;
+        }
+
+        public static RadialBarChartDto GetRadialChartDataModel(int totalCount, double currentMonthCount, double prevMonthCount)
+        {
+            RadialBarChartDto radialBarChartDto = new();
+
+            int increaseDecreaseRatio = 100;
+
+            if (prevMonthCount != 0)
+            {
+                increaseDecreaseRatio = Convert.ToInt32(((currentMonthCount - prevMonthCount) / prevMonthCount) * 100);
+            }
+
+            radialBarChartDto.TotalCount = totalCount;
+            radialBarChartDto.CountInCurrentMonth = Convert.ToInt32(currentMonthCount);
+            radialBarChartDto.hasRatioIncrease = currentMonthCount > prevMonthCount ? true : false;
+            radialBarChartDto.Series = new int[] { increaseDecreaseRatio };
+
+            return radialBarChartDto;
         }
     }
 }
