@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using VillaHotelBooking.Domain.Entities;
 using System.Globalization;
 using Stripe;
+using VillaHotelBooking.App.Services.Interface;
+using VillaHotelBooking.App.Services.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,12 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 
 // add unit of work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// add dashboard service
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+// add DbInitializer
+builder.Services.AddScoped<IDbInitialize, DbInitializer>();
 
 // add identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -63,9 +71,19 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+seedDatabase();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+void seedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitialize = scope.ServiceProvider.GetRequiredService<IDbInitialize>();
+        dbInitialize.Initialize();
+    }
+}

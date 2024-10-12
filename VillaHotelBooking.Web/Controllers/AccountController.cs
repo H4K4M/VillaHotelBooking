@@ -85,11 +85,7 @@ namespace VillaHotelBooking.Web.Controllers
         {
             returnUrl ??= Url.Content("~/");  // If returnUrl is null, set it to the root URL
 
-            if (!_roleManager.RoleExistsAsync(SD.Role_Admin).GetAwaiter().GetResult())
-            {
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).Wait();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).Wait();
-            }
+            
 
             RegisterVM registerVM = new RegisterVM
             {
