@@ -27,7 +27,7 @@ namespace VillaHotelBooking.Infa.Data
             _roleManager = roleManager;
         }
 
-        public async void Initialize()
+        public async void Initialize() // initialize the database if there are any pending migrations and create the admin user
         {
             try
             {
